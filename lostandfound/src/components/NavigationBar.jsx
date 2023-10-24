@@ -5,7 +5,7 @@ import {Link } from "react-router-dom";
 export default function NavigationBar() {
   return (
 
-        <nav className="navbar navbar-dark bg-dark fixed-top">
+        <nav className="navbar navbar-dark bg-darks fixed-top">
   <div className="container-fluid">
     <div className="d-flex">
     <Link className="navbar-brand font-link mx-auto " to="/">Lost And Found</Link>

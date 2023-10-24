@@ -2,7 +2,7 @@ import React from 'react'
 
 const Lost = () => {
   return (
-    <div>Find Lost Item</div>
+    <div>Find Lost Item..</div>
   )
 }
 
