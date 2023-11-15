@@ -1,7 +1,4 @@
-
 <%@ page import="java.sql.*" %>
-
-
 
 <!DOCTYPE html>
 
@@ -13,7 +10,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: white;
             padding: 20px;
         }
         .container {
@@ -29,19 +26,34 @@
         }
         .card {
             background-color: #fff;
-            border: 1px solid #ddd;
+            border:2px solid black; /* Updated border color */
             border-radius: 5px;
             padding: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column; /* Updated flex direction */
         }
-        .card:hover{
-           box-shadow:  0 0 3px 1px rgba(0, 0, 0, 0.5);
-
-             
+        .card:hover {
+            box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
         }
         .card img {
             max-width: 100%;
             height: auto;
+        }
+
+        .info {
+            flex: 1; /* Added flex property */
+            overflow-wrap: break-word;
+        }
+
+        .card h2 {
+            margin-bottom: 5px; /* Added margin to separate h2 and p */
+            overflow-wrap: break-word;
+        }
+
+        .card p {
+            flex-grow: 1; /* Allow the description to grow vertically */
+            margin-bottom: 10px; /* Added margin to separate p and button */
         }
         
         .add-button button {
@@ -58,90 +70,62 @@
             color: black;
         }
 
-        /* Style for preventing text overflow */
-        .card h2, .card p {
-            overflow-wrap: break-word;
-        }
-        .btn{
+        .btn {
             text-decoration: none;
             color: white;
         }
-        .btn:hover{
+
+        .btn:hover {
             color: black;
         }
-        a{
+
+        a {
             text-decoration: none;
             color: black;
         }
     </style>
 </head>
 
-
-    
-        <div style="display: flex;justify-content: space-around;align-items: center;border: solid black 2px">
-            <h1>Found Items</h1>
-            <div class="add-button">
-                <a class="btn" href="addFoundItems.jsp"><button id="add-card-button">Add Items </button></a>
-            </div>
+<body>
+    <div style="display: flex;justify-content: space-around;align-items: center;border: solid black 2px">
+        <h1>Found Items</h1>
+        <div class="add-button">
+            <a class="btn" href="addFoundItems.jsp"><button id="add-card-button">Add Items </button></a>
         </div>
-     
+    </div>
 
+    <div class="grid" id="card-grid">
+        <%-- Your existing code for displaying items --%>
+        <%
+        Connection conn = null;
+        Statement stmt = null;
 
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/lostandfound", "root", "");
+            stmt = conn.createStatement();
+            String query = "SELECT itemName, itemDescription, itemImage FROM founditems";
+            ResultSet rs = stmt.executeQuery(query);
 
-        <div class="grid" id="card-grid">
-            <%-- Your existing code for displaying items --%>
-            <%
-            Connection conn = null;
-            Statement stmt = null;
+            while (rs.next()) {
+                String itemName = rs.getString("itemName");
+                String itemDescription = rs.getString("itemDescription");
+                String itemImage = rs.getString("itemImage");
+        %>
 
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/lostandfound", "root", "");
-                stmt = conn.createStatement();
-                String query = "SELECT itemName, itemDescription, itemImage FROM founditems";
-                ResultSet rs = stmt.executeQuery(query);
-
-                while (rs.next()) {
-                    String itemName = rs.getString("itemName");
-                    String itemDescription = rs.getString("itemDescription");
-                    String itemImage = rs.getString("itemImage");
-            %>
-            <a href="foundItemsDecription.jsp">
-            <div class="card">
+        <div class="card">
+            <div class="info">
                 <img src="<%= itemImage %>">
-                <h2><%= itemName %></h2>
-                <p><%= itemDescription %></p>
+                <h2>ItemName: <%= itemName %></h2>
+                <p>Description: <%= itemDescription %></p>
             </div>
-            </a>
-           
-
-          
-            <%
-                }
-            } catch (Exception e) {
-                out.println("Something went wrong! Please try again.");
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (stmt != null) {
-                        stmt.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            %>
-
-
-
+            
+            <div class="add-button">
+                <a href="addFoundItems.jsp"><button id="add-card-button">Claim </button></a>
+            </div>
         </div>
-    
 
-    
-
-  
-
+        <% } } catch (Exception e) { out.println("Something went wrong! Please try again."); e.printStackTrace(); } finally { try { if (stmt != null) { stmt.close(); } if (conn != null) { conn.close(); } } catch (SQLException e) { e.printStackTrace(); } } %>
+    </div>
+</body>
 </html>
